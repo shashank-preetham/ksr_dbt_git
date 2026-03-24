@@ -37,6 +37,50 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 models:
   my_new_project:
-    # Applies to all files under models/example/
-    example:
+
+    raw:
+      +schema: SF_SCHEMA
+      +materialized: view
+
+    silver:
+      +schema: SILVER_SCH
       +materialized: table
+
+    gold:
+      +schema: CLEAN_SCHEMA
+      +database: DBT_CLEAN
+      +materialized: view
+    
+    raw_incremental:
+      +schema: PROD_SCH
+
+      customer_master_append:
+        +materialized: incremental
+
+      customer_master_merge:
+        +materialized: incremental
+        +incremental_strategy: merge
+        +unique_key: customer_id
+
+      cust_master_merge_optimize:
+        +materialized: incremental
+        +incremental_strategy: merge
+        +unique_key: customer_id
+        +incremental_predicates:
+          - "DBT_INTERNAL_DEST.registered_on >= DATEADD(day, -30, CURRENT_DATE)"
+
+      customer_master_delete_insert:
+        +materialized: incremental
+        +incremental_strategy: delete+insert
+        +unique_key: customer_id
+
+      customer_orders_enriched:
+        +materialized: incremental
+        +incremental_strategy: merge
+        +unique_key: order_id
+        +incremental_predicates:
+          - "DBT_INTERNAL_DEST.order_date >= DATEADD(day, -30, CURRENT_DATE)"
+
+snapshots:
+  my_new_project:
+    +target_schema: snapshots_scd2
