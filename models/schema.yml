@@ -1,0 +1,27 @@
+version: 2
+
+sources:
+  - name: data_feed
+    database: DBT_LABS
+    schema: DBT_
+    tables:
+      - name: raw_customer
+      - name: raw_orders
+      
+  - name: data_feed_raw
+    database: DBT_LABS
+    schema: RAW_SCHEMA
+
+    tables:
+      - name: CUSTOMER
+      - name: PRODUCT
+      - name: DELIVERY_STATUS_FACT
+  
+  - name: raw_data
+    database: DBT_LABS
+    schema: raw_data
+    tables:
+      - name: customer_master
+      - name: customer_orders
+      - name: cust_tbl
+      

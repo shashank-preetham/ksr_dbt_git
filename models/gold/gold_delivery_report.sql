@@ -1,0 +1,18 @@
+SELECT
+    CUSTOMER_ID,
+    CUSTOMER_NAME,
+    EMAIL,
+    CITY,
+
+    PRODUCT_ID,
+    PRODUCT_NAME,
+    PRODUCT_CATEGORY,
+
+    DELIVERY_STATUS_DESC,
+    DELIVERY_DATE,
+    COURIER_SERVICE
+
+FROM {{ ref('delivery_fact_analysis') }}
+
+-- Filter out pending deliveries
+WHERE DELIVERY_STATUS_DESC != 'AWAITING DISPATCH'
